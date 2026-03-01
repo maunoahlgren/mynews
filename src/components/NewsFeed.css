@@ -1,0 +1,126 @@
+/* ── Source filter tabs ─────────────────────────────────────────────────── */
+
+.source-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.5rem 0;
+}
+
+.source-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.source-tab:hover:not(.active) {
+  border-color: var(--tab-color, var(--accent));
+  color: var(--text-primary);
+}
+
+.source-tab.active {
+  background: var(--tab-color, var(--accent));
+  border-color: var(--tab-color, var(--accent));
+  color: #fff;
+}
+
+.tab-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tab-count {
+  font-size: 0.72rem;
+  opacity: 0.75;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 0 0.35rem;
+  border-radius: 99px;
+}
+
+.source-tab.active .tab-count {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Error banners ──────────────────────────────────────────────────────── */
+
+.feed-errors {
+  margin: 1rem 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.feed-error-item {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--error);
+  padding: 0.4rem 0.75rem;
+  background: color-mix(in srgb, var(--error) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--error) 25%, transparent);
+  border-radius: 6px;
+}
+
+/* ── Article grid ───────────────────────────────────────────────────────── */
+
+.feed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+}
+
+/* ── Empty state ────────────────────────────────────────────────────────── */
+
+.feed-empty {
+  padding: 4rem 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ── Loading skeletons ──────────────────────────────────────────────────── */
+
+.card-skeleton {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-image {
+  height: 160px;
+  background: var(--surface-alt);
+}
+
+.skeleton-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.skeleton-line {
+  height: 0.75rem;
+  background: var(--surface-alt);
+  border-radius: 4px;
+}
+
+.skeleton-line.short  { width: 40%; }
+.skeleton-line.medium { width: 65%; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
