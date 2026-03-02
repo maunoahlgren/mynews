@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Header from './components/Header'
 import NewsFeed from './components/NewsFeed'
 import { NEWS_SOURCES } from './data/sources'
-import { fetchAllFeeds } from './services/rssService'
+import { fetchAllTopics } from './services/gnewsService'
 import './App.css'
 
 /**
@@ -35,7 +35,7 @@ export default function App() {
   const loadFeeds = useCallback(async () => {
     setLoading(true)
     try {
-      const { articles: fetched, errors: fetchErrors } = await fetchAllFeeds(NEWS_SOURCES)
+      const { articles: fetched, errors: fetchErrors } = await fetchAllTopics(NEWS_SOURCES)
       setArticles(fetched)
       setErrors(fetchErrors)
       setLastUpdated(new Date())
