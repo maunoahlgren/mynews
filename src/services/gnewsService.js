@@ -1,24 +1,24 @@
 /**
  * GNews Service
  *
- * Fetches AI news articles from the GNews API (https://gnews.io).
+ * Fetches AI news articles via the /api/news serverless function, which
+ * proxies requests to the GNews API (https://gnews.io) server-side.
  *
- * Why GNews instead of RSS?
- * -------------------------
- * The previous RSS approach routed all requests through rss2json.com, a free
- * CORS proxy. Its free tier caps at ~10 requests/day per feed — the 10-minute
- * auto-refresh exhausted that quota in under an hour. GNews provides a proper
- * JSON API with CORS headers baked in, so no proxy is needed.
+ * Why a server-side proxy?
+ * ------------------------
+ * Vite bakes VITE_* env vars into the client bundle at build time. If the
+ * variable is absent when Vercel builds, it stays missing forever in that
+ * bundle — no redeploy from the dashboard fixes it without a full rebuild.
+ * Moving the key to a serverless function (GNEWS_API_KEY, no VITE_ prefix)
+ * keeps it server-side and avoids the bake-time issue entirely.
  *
- * Environment variable
- * --------------------
- * Requires VITE_GNEWS_API_KEY set in your .env file (see .env.example).
- * For Vercel: add it under Project → Settings → Environment Variables.
+ * Local development
+ * -----------------
+ * Run `vercel dev` instead of `vite` so the /api/news function is served
+ * alongside the Vite dev server. Set GNEWS_API_KEY in your .env file.
  *
  * API reference: https://gnews.io/docs/v4
  */
-
-const GNEWS_BASE = 'https://gnews.io/api/v4'
 
 /** Articles to request per topic query */
 const ARTICLES_PER_TOPIC = 10
@@ -62,22 +62,17 @@ export async function fetchAllTopics(topics, count = ARTICLES_PER_TOPIC) {
 }
 
 /**
- * Fetch a single topic from GNews /search.
+ * Fetch a single topic via the /api/news proxy.
  *
  * @param {object} topic - A topic entry from src/data/sources.js
  * @param {number} count - Max articles to return
  * @returns {Promise<Article[]>}
  */
 export async function fetchTopic(topic, count = ARTICLES_PER_TOPIC) {
-  const apiKey = import.meta.env.VITE_GNEWS_API_KEY
-  if (!apiKey) throw new Error('VITE_GNEWS_API_KEY is not set')
-
   const url =
-    `${GNEWS_BASE}/search` +
-    `?q=${encodeURIComponent(topic.query)}` +
-    `&lang=en` +
-    `&max=${count}` +
-    `&apikey=${apiKey}`
+    `/api/news` +
+    `?query=${encodeURIComponent(topic.query)}` +
+    `&count=${count}`
 
   const response = await fetch(url)
   if (!response.ok) {
@@ -87,7 +82,7 @@ export async function fetchTopic(topic, count = ARTICLES_PER_TOPIC) {
   const data = await response.json()
   if (!Array.isArray(data.articles)) {
     throw new Error(
-      `Unexpected GNews response for "${topic.name}": ${JSON.stringify(data)}`
+      `Unexpected response for "${topic.name}": ${JSON.stringify(data)}`
     )
   }
 
