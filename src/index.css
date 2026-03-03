@@ -23,7 +23,7 @@
   --error:          #ef4444;
 }
 
-/* Light mode overrides */
+/* Light mode overrides (system preference) */
 @media (prefers-color-scheme: light) {
   :root {
     --bg:             #f5f6fa;
@@ -36,6 +36,31 @@
     --accent:         #4f46e5;
     --error:          #dc2626;
   }
+}
+
+/* Manual theme overrides — take priority over prefers-color-scheme */
+[data-theme="dark"] {
+  --bg:             #0f1117;
+  --surface:        #1a1d27;
+  --surface-alt:    #22263a;
+  --border:         #2a2e42;
+  --text-primary:   #e8eaf0;
+  --text-secondary: #9da3b4;
+  --text-muted:     #5f6680;
+  --accent:         #6366f1;
+  --error:          #ef4444;
+}
+
+[data-theme="light"] {
+  --bg:             #f5f6fa;
+  --surface:        #ffffff;
+  --surface-alt:    #f0f1f5;
+  --border:         #e2e4ec;
+  --text-primary:   #111827;
+  --text-secondary: #4b5563;
+  --text-muted:     #9ca3af;
+  --accent:         #4f46e5;
+  --error:          #dc2626;
 }
 
 /* ── Reset / base ───────────────────────────────────────────────────────── */

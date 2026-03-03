@@ -37,4 +37,25 @@ export const NEWS_SOURCES = [
     color: '#fa4b2a',
     description: 'AI companies, startups, and business news',
   },
+  {
+    id: 'ai-ethics',
+    name: 'AI Ethics',
+    query: 'AI ethics safety regulation policy',
+    color: '#f59e0b',
+    description: 'AI safety, ethics, and regulation',
+  },
+  {
+    id: 'ai-tools',
+    name: 'AI Tools',
+    query: 'AI tool product launch app feature release',
+    color: '#06b6d4',
+    description: 'New AI tools and product launches',
+  },
+  {
+    id: 'robotics',
+    name: 'Robotics',
+    query: 'robotics autonomous robot',
+    color: '#ec4899',
+    description: 'Robotics and autonomous systems',
+  },
 ]
