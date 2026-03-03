@@ -37,7 +37,15 @@ export default async function handler(req, res) {
   try {
     const response = await fetch(url)
     const data = await response.json()
-    res.status(response.status).json(data)
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: `GNews API error (${response.status})`,
+        detail: data,
+      })
+    }
+
+    res.status(200).json(data)
   } catch (err) {
     res.status(502).json({ error: `Failed to reach GNews: ${err.message}` })
   }

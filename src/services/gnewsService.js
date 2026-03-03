@@ -76,7 +76,8 @@ export async function fetchTopic(topic, count = ARTICLES_PER_TOPIC) {
 
   const response = await fetch(url)
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status} fetching topic "${topic.name}"`)
+    const body = await response.text().catch(() => '')
+    throw new Error(`HTTP ${response.status} fetching topic "${topic.name}": ${body}`)
   }
 
   const data = await response.json()
