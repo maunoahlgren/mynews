@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { fetchTopic, fetchAllTopics } from './gnewsService'
 
 // ---------------------------------------------------------------------------
@@ -46,12 +46,7 @@ function mockFetch(payload, status = 200) {
 // Setup / teardown
 // ---------------------------------------------------------------------------
 
-beforeEach(() => {
-  vi.stubEnv('VITE_GNEWS_API_KEY', 'test-api-key-123')
-})
-
 afterEach(() => {
-  vi.unstubAllEnvs()
   vi.restoreAllMocks()
 })
 
@@ -146,27 +141,19 @@ describe('fetchTopic', () => {
   it('throws when the response body contains no articles array', async () => {
     mockFetch({ errors: ['quota exceeded'] })
 
-    await expect(fetchTopic(TOPIC_A)).rejects.toThrow('Unexpected GNews response')
+    await expect(fetchTopic(TOPIC_A)).rejects.toThrow('Unexpected response')
     await expect(fetchTopic(TOPIC_A)).rejects.toThrow('AI News')
   })
 
-  it('throws immediately when the API key env var is not set', async () => {
-    vi.unstubAllEnvs()
-    vi.stubEnv('VITE_GNEWS_API_KEY', '')
-
-    await expect(fetchTopic(TOPIC_A)).rejects.toThrow('VITE_GNEWS_API_KEY is not set')
-  })
-
-  it('includes the API key, query, count, and language in the request URL', async () => {
+  it('calls /api/news with the topic query and count', async () => {
     mockFetch({ articles: [] })
 
     await fetchTopic(TOPIC_A, 7)
 
     const calledUrl = global.fetch.mock.calls[0][0]
-    expect(calledUrl).toContain('apikey=test-api-key-123')
+    expect(calledUrl).toContain('/api/news')
     expect(calledUrl).toContain(encodeURIComponent('artificial intelligence'))
-    expect(calledUrl).toContain('max=7')
-    expect(calledUrl).toContain('lang=en')
+    expect(calledUrl).toContain('count=7')
   })
 
   it('respects a custom count argument', async () => {
@@ -175,7 +162,7 @@ describe('fetchTopic', () => {
     await fetchTopic(TOPIC_A, 3)
 
     const calledUrl = global.fetch.mock.calls[0][0]
-    expect(calledUrl).toContain('max=3')
+    expect(calledUrl).toContain('count=3')
   })
 })
 
